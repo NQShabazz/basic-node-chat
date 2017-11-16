@@ -1,0 +1,36 @@
+body {
+  background: linear-gradient(45deg, #0ba, #4af);
+  background-attachment: fixed; }
+
+#connectionStatus{
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+
+#messageContainer {
+  overflow-y: auto;
+  max-height: 75vh; }
+
+#messageContainer p {
+  font-size: 18px;
+  font-family: Arial;
+  padding: 10px;
+  margin: 0 2px;
+  overflow-wrap: break-word;
+  border-radius: 5px;
+  background: #ddd; }
+
+#messageContainer span {
+  display: block;
+  padding: 10px 0;
+  color: #444; }
+
+#messageContainer p time {
+  display: block;
+  font-size: 80%; }
+
+#messageContainer p.myMessage {
+  background-color: #fff; }
+
+/*# sourceMappingURL=chat.css.map */

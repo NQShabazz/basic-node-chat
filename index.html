@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <!-- Socket.IO JS ContentDeliveryNetwork -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        
+        <!-- JQuery JS ContentDeliveryNetwork -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        
+        <!-- Bootstrap CSS ContentDeliveryNetwork -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        
+        <!-- Bootstrap Tooltips Tether JS ContentDeliveryNetwork -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        
+        <!-- Bootstrap JS ContentDeliveryNetwork -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+        
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
+    <body class="container">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="http://nqshabazz.com">
+                <img class="img-responsive" alt="logo" src="assets/img/LOGO_sm.png">
+              </a>
+            </div>
+          </div>
+        </nav>
+        
+        <main>
+            <div class="navbar">
+                <h1 class="text-white">Server Chat</h1>
+                <p class="text-warning"><span id="connectionStatus">&#9679; connecting...</span></p>
+            </div>
+            
+            <div id="messageContainer"></div>
+            
+            <div class="input-group">
+                <input type="text" class="form-control" id="typeBox" placeholder="Send a message">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" onclick="sendMessage()">Send!</button>
+                </span>
+            </div>
+
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p id="loginStatus"></p>
+                            <input type="text" class="form-control" id="usernameBox" placeholder="Choose a username">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+            var socket = io('http://198.211.110.180:1025/');
+            var usernameBox = document.querySelector('#usernameBox');
+            var typeBox = document.querySelector('#typeBox');
+            var messageContainer = document.querySelector('#messageContainer');
+            var username = "USER" + Date.now();
+            var lastSender = "";
+            
+            socket.confirmed = false;
+            
+            function addMessage(sender, message){
+                messageContainer.innerHTML += (sender === lastSender? "":"<span>" + sender + "</span>") + "<p" + (sender === username?" class='myMessage'":"") + ">" + message + "<time datetime='" + Date.now() + "'>" + (new Date().toLocaleTimeString()) + "</time></p>";
+                
+                lastSender = sender;
+            }
+            
+            function sendMessage(){
+                if(typeBox.value.trim() !== ""){
+                    socket.emit("message", {sender: username, message: typeBox.value});
+                    typeBox.value = "";
+                }
+            }
+            
+            socket.on("new_message", function(m){
+                addMessage(m.sender, m.message);
+            });
+            
+            socket.on('server_notif', function(m){
+                if(m.message === "login_fail"){
+                    document.querySelector('#loginStatus').classList.add("text-danger");
+                    document.querySelector('#loginStatus').classList.remove("invisible");
+                    document.querySelector('#loginStatus').innerHTML = m.message + ": " + m.reason;
+                    
+                    return;
+                }
+                
+                if(m.message === "login_success"){
+                    document.querySelector('#connectionStatus').classList.remove("text-warning");
+                    document.querySelector('#connectionStatus').classList.add("text-success");
+                    document.querySelector('#connectionStatus').innerHTML = "&#9679; online";
+                    $("#myModal").modal("hide");
+                    
+                    username = m.reason;
+                    socket.confirmed = true;
+                }
+                
+                messageContainer.innerHTML += "<span class='text-center'>" + m.message + "</span>";
+            });
+            
+            $(document).ready(() => {
+                usernameBox.addEventListener('keyup', (event) => {
+                    document.querySelector('#loginStatus').classList.remove("text-danger");
+                    document.querySelector('#loginStatus').classList.add("invisible");
+                    
+                    if(!socket.confirmed && usernameBox.value.trim() !== "" && event.keyCode === 13)
+                        socket.emit("login", {message: usernameBox.value});
+                });
+                
+                typeBox.addEventListener('keyup', (event) => {
+                    if(event.keyCode === 13)
+                        sendMessage();
+                });
+                
+                $("#myModal").modal({backdrop: 'static'});
+            });
+        </script>
+    </body>
+</html>
