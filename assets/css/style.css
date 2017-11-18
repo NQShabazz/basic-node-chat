@@ -10,7 +10,8 @@ body {
 
 #messageContainer {
   overflow-y: auto;
-  max-height: 75vh; }
+  max-height: 60vh;
+}
 
 #messageContainer p {
   font-size: 18px;
@@ -19,7 +20,7 @@ body {
   margin: 0 2px;
   overflow-wrap: break-word;
   border-radius: 5px;
-  background: #ddd; }
+  background: #eee; }
 
 #messageContainer span {
   display: block;
