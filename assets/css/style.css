@@ -1,8 +1,9 @@
 body {
   background: linear-gradient(45deg, #0ba, #4af);
-  background-attachment: fixed; }
+  background-attachment: fixed;
+}
 
-#connectionStatus{
+#connectionStatus {
   padding: 10px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 5px;
@@ -20,18 +21,25 @@ body {
   margin: 0 2px;
   overflow-wrap: break-word;
   border-radius: 5px;
-  background: #eee; }
+  background: #eee;
+}
 
-#messageContainer span {
+#messageContainer p.yelling{
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#messageContainer>span {
   display: block;
   padding: 10px 0;
-  color: #444; }
-
-#messageContainer p time {
-  display: block;
-  font-size: 80%; }
+  color: #444;
+}
 
 #messageContainer p.myMessage {
-  background-color: #fff; }
+  background-color: #fff;
+}
 
-/*# sourceMappingURL=chat.css.map */
+#messageContainer span.mini, #messageContainer time {
+  font-size: 75%;
+}

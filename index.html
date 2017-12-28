@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="assets/css/style.css">
+  
+  <title>Basic Node Chat</title>
 </head>
 
 <body class="container">
@@ -64,26 +66,31 @@
     const audioCtx = new AudioContext();
     const oscillator = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    
+
     let socket = io('http://198.211.110.180:1025/');
     let usernameBox = document.querySelector('#usernameBox');
     let typeBox = document.querySelector('#typeBox');
     let messageContainer = document.querySelector('#messageContainer');
-    let username = "USER" + Date.now();
+    let myUID = null;
+    let username = "USER " + Date.now();
     let lastSender = "";
 
     socket.confirmed = false;
 
-    function addMessage(sender, message) {
-      messageContainer.innerHTML += (sender === lastSender ? "" : "<span>" + sender + "</span>") + "<p" + (sender === username ? " class='myMessage'" : "") + ">" + message + "<time datetime='" + Date.now() + "'>" + (new Date().toLocaleTimeString()) + "</time></p>";
+    function addMessage(m) {
+      let id = Date.now() + m.uID;
+      messageContainer.innerHTML += "<span>" + m.sender + " <span class='mini'>#" + m.uID + "</span> | <time datetime='" + Date.now() + "'>" + (new Date().toLocaleTimeString()) + "</time></span>" + "<p id='" + id + "'" + (m.uID === myUID ? " class='myMessage'" : "") + ">" + m.message + "</p>";
+      document.getElementById(id).innerText = m.message;
       
-      lastSender = sender;
+      if(m.yelling)
+        document.getElementById(id).classList.add("yelling");
+      
+      lastSender = m.uID;
     }
 
     function sendMessage() {
       if (typeBox.value.trim() !== "") {
         socket.emit("message", {
-          sender: username,
           message: typeBox.value
         });
         typeBox.value = "";
@@ -92,13 +99,13 @@
 
     socket.on("new_message", function(m) {
       let stickToBottom = messageContainer.scrollTop >= messageContainer.scrollHeight - messageContainer.offsetHeight;
-      
-      addMessage(m.sender, m.message);
-      
-      if(stickToBottom)
+
+      addMessage(m);
+
+      if (stickToBottom)
         messageContainer.scrollTop = messageContainer.scrollHeight;
-      
-      if(!document.hasFocus()){
+
+      if (!document.hasFocus()) {
         gain.gain.value = 0.5;
         gain.connect(audioCtx.destination);
         lowerVolume();
@@ -107,16 +114,14 @@
 
     socket.on('server_notif', function(m) {
       let stickToBottom = messageContainer.scrollTop >= messageContainer.scrollHeight - messageContainer.offsetHeight;
-      
+
       if (m.message === "login_fail") {
         document.querySelector('#loginStatus').classList.add("text-danger");
         document.querySelector('#loginStatus').classList.remove("invisible");
         document.querySelector('#loginStatus').innerHTML = m.message + ": " + m.reason;
 
         return;
-      }
-
-      if (m.message === "login_success") {
+      }else if (m.message === "login_success") {
         document.querySelector('#connectionStatus').classList.remove("text-warning");
         document.querySelector('#connectionStatus').classList.add("text-success");
         document.querySelector('#connectionStatus').innerHTML = "&#9679; online";
@@ -124,48 +129,57 @@
 
         username = m.reason;
         socket.confirmed = true;
-      }
+      }else
+        messageContainer.innerHTML += "<span class='text-center'>" + m.message + "</span>";
 
-      messageContainer.innerHTML += "<span class='text-center'>" + m.message + "</span>";
-      
-      if(stickToBottom)
+      if (stickToBottom)
         messageContainer.scrollTop = messageContainer.scrollHeight;
     });
 
     $(document).ready(() => {
-      usernameBox.addEventListener('keyup', (event) => {
-        document.querySelector('#loginStatus').classList.remove("text-danger");
-        document.querySelector('#loginStatus').classList.add("invisible");
+      if (localStorage) {
+        if (localStorage.getItem("uID") === null)
+          localStorage.setItem("uID", +("" + Date.now() + ((Math.random() * 1000) | 0)));
 
-        if (!socket.confirmed && usernameBox.value.trim() !== "" && event.key === 'Enter')
-          socket.emit("login", {
-            message: usernameBox.value
-          });
-      });
+        myUID = localStorage.getItem("uID");
 
-      typeBox.addEventListener('keyup', (event) => {
-        if (event.key === 'Enter')
-          sendMessage();
-      });
+        usernameBox.addEventListener('keyup', (event) => {
+          document.querySelector('#loginStatus').classList.remove("text-danger");
+          document.querySelector('#loginStatus').classList.add("invisible");
 
-      $("#myModal").modal({
-        backdrop: 'static'
-      });
-      
-      oscillator.connect(gain);
-      gain.connect(audioCtx.destination);
-      
-      oscillator.frequency.value = 250;
-      oscillator.type = 'triangle';
-      oscillator.start(0);
-      gain.gain.value = 0;
+          if (!socket.confirmed && usernameBox.value.trim() !== "" && event.key === 'Enter')
+            socket.emit("login", {
+              uID: myUID,
+              message: usernameBox.value
+            });
+        });
+
+        typeBox.addEventListener('keyup', (event) => {
+          if (event.key === 'Enter')
+            sendMessage();
+        });
+
+        $("#myModal").modal({
+          backdrop: 'static'
+        });
+
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        oscillator.frequency.value = 250;
+        oscillator.type = 'triangle';
+        oscillator.start(0);
+        gain.gain.value = 0;
+      } else {
+        alert("Your browser does not support localstorage, which is necessary for authentication");
+      }
     });
-    
-    function lowerVolume(){
-      if(gain.gain.value > 0){
+
+    function lowerVolume() {
+      if (gain.gain.value > 0) {
         gain.gain.value = Math.max(0, gain.gain.value - 0.05);
         setTimeout(lowerVolume, 25);
-      }else{
+      } else {
         gain.gain.value = 0;
         gain.disconnect(audioCtx.destination);
       }
