@@ -6,7 +6,7 @@ module.exports = {
   init: function () {
     console.log("----- Initializing '" + this.title + "' -----");
 
-    let server = require('http').createServer(function (req, res) {});
+    let server = require('https').createServer(function (req, res) {});
     server.listen(this.servPort, '198.211.110.180');
 
     console.log("Server active on local port " + this.servPort + "...");
