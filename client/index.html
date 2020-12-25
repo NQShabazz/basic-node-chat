@@ -4,11 +4,16 @@
 <head>
   <!-- meta data -->
   <meta charset="UTF-8">
-  
+
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Cool little chat program written with Node and Socket.IO">
   <meta name="keywords" content="Node.js, Socket.IO, WebSockets, Chat, Code">
   <meta name="author" content="Nazaire Shabazz">
+
+  <!-- meta links -->
+  <link rel="publisher" href="https://plus.google.com/u/0/111346714509241869686" />
+  <link rel="canonical" href="/" />
+  <link rel="shortcut icon" type="image/png" href="assets/img/favicon.png" />
 
   <!-- Socket.IO JS ContentDeliveryNetwork -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.min.js"></script>
@@ -81,94 +86,7 @@
     </div>
   </main>
 
-  <script>
-    const socket = io()//'https://basic-node-chat.nqshabazz.com:1025/');
-    const usernameInput = document.querySelector('#username-input')
-    const messageInput = document.querySelector('#message-input')
-    const messageContainer = document.querySelector('#messageContainer')
-    const commandHistory = []
-
-    let commandIndex = 0
-    let uID = localStorage && localStorage.getItem('node-chat-userID')
-    
-    function sendMessage(message) {
-      socket.emit('message', message)
-
-      commandHistory[commandHistory.length - 1] = message
-      commandHistory.push('')
-
-      commandIndex = commandHistory.length - 1
-    }
-
-    function addMessage(m, isServer) {
-      const id = Date.now() + Math.random().toString(16).substr(2, 8)
-      const stickToBottom = messageContainer.scrollTop >= messageContainer.scrollHeight - messageContainer.offsetHeight;
-
-      isServer ?
-        messageContainer.innerHTML += `<span class='text-center' id='${id}'>${m}</span>`
-        : messageContainer.innerHTML += `
-          <span>
-            ${m.sender}
-            <span class="mini">#${m.uID}</span> | <time datetime="${Date.now()}">${(new Date().toLocaleTimeString())}</time>
-          </span>
-          <p id="${id}"${(m.uID === uID ? ' class="myMessage"' : '')}>
-            ${m.message}
-          </p>`
-
-      m.yelling && document.getElementById(id).classList.add('yelling')
-
-      if (stickToBottom) messageContainer.scrollTop = messageContainer.scrollHeight
-    }
-
-    $(document).ready(() => {
-      $('#myModal').modal({ backdrop: 'static', keyboard: false })
-      $('#myModal').on('shown.bs.modal', () => usernameInput.focus())
-
-      socket.on('login_fail', m => {
-        document.querySelector('#loginStatus').classList.add('text-danger')
-        document.querySelector('#loginStatus').classList.remove('invisible')
-        document.querySelector('#loginStatus').innerHTML = m
-      })
-      socket.on('authenticated', m => {
-        document.querySelector('#connectionStatus').classList.remove('text-warning')
-        document.querySelector('#connectionStatus').classList.add('text-success')
-        document.querySelector('#connectionStatus').innerHTML = '&#9679; online'
-
-        $('#myModal').modal('hide')
-        messageInput.focus()
-
-        localStorage.setItem('node-chat-userID', m.id)
-        socket.confirmed = true
-      })
-      socket.on('reconnect_fail', () => {
-        localStorage.removeItem('node-chat-userID')
-        $('#myModal').modal('show')
-      })
-      socket.on('server_notif', m => addMessage(m, 1))
-      socket.on('message', m => addMessage(m))
-
-      uID ? socket.emit('reconnect', uID) : $('#myModal').modal('show')
-
-      usernameInput.addEventListener('keyup', (event) => {
-        document.querySelector('#loginStatus').classList.remove('text-danger')
-        document.querySelector('#loginStatus').classList.add('invisible')
-
-        event.key === 'Enter' && socket.emit('login', { username: usernameInput.value })
-      })
-
-      messageInput.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-          sendMessage(messageInput.value)
-          messageInput.value = ''
-        } else if (event.key === 'ArrowUp' && messageInput.selectionStart === 0)
-          messageInput.value = commandHistory[commandIndex = Math.max(0, --commandIndex)]
-        else if (event.key === 'ArrowDown' && messageInput.selectionStart === messageInput.value.length)
-          messageInput.value = commandHistory[commandIndex = Math.min(commandHistory.length - 1, ++commandIndex)]
-        else
-          commandHistory[commandIndex] = messageInput.value
-      })
-    })
-  </script>
+  <script src="./main.js"></script>
 </body>
 
 </html>

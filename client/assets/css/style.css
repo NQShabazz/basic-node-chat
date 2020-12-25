@@ -11,7 +11,7 @@ body {
 
 #messageContainer {
   overflow-y: auto;
-  max-height: 60vh;
+  height: 60vh;
 }
 
 #messageContainer p {
@@ -30,16 +30,12 @@ body {
   text-transform: uppercase;
 }
 
-#messageContainer>span {
+#messageContainer > span {
   display: block;
   padding: 10px 0;
   color: #444;
 }
 
-#messageContainer p.myMessage {
-  background-color: #fff;
-}
+#messageContainer p.myMessage {background-color: #fff}
 
-#messageContainer span.mini, #messageContainer time {
-  font-size: 75%;
-}
+#messageContainer span.mini, #messageContainer time {font-size: 75%}
