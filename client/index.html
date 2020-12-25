@@ -26,12 +26,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-
-  <!-- Bootstrap Tooltips Tether JS ContentDeliveryNetwork -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-    integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-    crossorigin="anonymous"></script> -->
-
   <!-- Bootstrap JS ContentDeliveryNetwork -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
@@ -59,26 +53,26 @@
   <main>
     <div class="navbar">
       <h1 class="text-white">Server Chat</h1>
-      <p class="text-warning"><span id="connectionStatus">&#9679; connecting...</span></p>
+      <p class="text-warning"><span id="connection-status">&#9679; connecting...</span></p>
     </div>
 
-    <div id="messageContainer"></div>
+    <div id="message-container"></div>
 
     <div class="input-group">
       <input type="text" class="form-control" id="message-input" placeholder="Send a message">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="button" onclick="sendMessage()">Send!</button>
+        <button class="btn btn-primary" id="send-message-button" type="button">Send!</button>
       </span>
     </div>
 
     <br />
     <i>/help</i>
 
-    <div class="modal fade" id="myModal" tab-index='-1' aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="my-modal" tab-index='-1' aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            <p id="loginStatus"></p>
+            <p id="login-status"></p>
             <input type="text" class="form-control" id="username-input" placeholder="Choose a username">
           </div>
         </div>

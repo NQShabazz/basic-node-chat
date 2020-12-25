@@ -3,18 +3,18 @@ body {
   background-attachment: fixed;
 }
 
-#connectionStatus {
+#connection-status {
   padding: 10px;
   background: #fffa;
   border-radius: 5px;
 }
 
-#messageContainer {
+#message-container {
   overflow-y: auto;
   height: 60vh;
 }
 
-#messageContainer p {
+#message-container p {
   font-size: 18px;
   font-family: Arial;
   padding: 10px;
@@ -24,18 +24,18 @@ body {
   background: #eee;
 }
 
-#messageContainer p.yelling{
+#message-container p.yelling{
   font-size: 24px;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-#messageContainer > span {
+#message-container > span {
   display: block;
   padding: 10px 0;
   color: #444;
 }
 
-#messageContainer p.myMessage {background-color: #fff}
+#message-container p.my-message {background-color: #fff}
 
-#messageContainer span.mini, #messageContainer time {font-size: 75%}
+#message-container span.mini, #message-container time {font-size: 75%}

@@ -14,7 +14,7 @@ module.exports = (port) => {
   app.use('/', express.static(__dirname + '/client'))
   // console.log('File request fulfillment initialized...')
 
-  const badExpression = /shit|cunt|bitch|nigger|chink|faggot|whore|twat|prick|nigga|pussy|slut|anal|butt|cock|coon|dildo|dyke|fag|homo|prick|queer|tit|turd|wank|smegma|ass|dick/
+  const badExpression = /shit|cunt|bitch|nigger|chink|faggot|whore|twat|prick|nigga|pussy|slut|cock|coon|dyke|fag|homo|prick|tit|turd|wank|smegma|ass|dick/
   const defaultRoom = 'main'
   const serverNotif = 'server_notif'
   const disconnectedSocketArray = []
