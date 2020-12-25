@@ -5,7 +5,7 @@ body {
 
 #connectionStatus {
   padding: 10px;
-  background: rgba(0, 0, 0, 0.25);
+  background: #fffa;
   border-radius: 5px;
 }
 
