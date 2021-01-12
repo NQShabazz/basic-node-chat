@@ -1,5 +1,6 @@
 $(document).ready(() => {
-  const socket = io()
+  const localhost = 0
+  const socket = localhost ? io() : io('https://basic-node-chat-deploy.herokuapp.com/')
   const usernameInput = document.querySelector('#username-input')
   const messageInput = document.querySelector('#message-input')
   const messageContainer = document.querySelector('#message-container')
