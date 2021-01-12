@@ -11,7 +11,13 @@ module.exports = (port) => {
   const io = require('socket.io')(server, { cors: { origin: '*' } })
   // console.log('Libraries and packages imported...')
 
-  app.use('/', express.static(__dirname + '/client'))
+  app.use('/',(req, res, next) => {
+    const validRequests = ['/', '/main.js','/assets/css/style.css','/assets/img/LOGO_sm.png','/assets/img/favicon.png']
+    
+    validRequests.includes(req.url)
+      ? next()
+      : res.status(404).send('nah fam')
+  }, express.static(__dirname))
   // console.log('File request fulfillment initialized...')
 
   const badExpression = /shit|cunt|bitch|nigger|chink|faggot|whore|twat|prick|nigga|pussy|slut|cock|coon|dyke|fag|homo|prick|tit|turd|wank|smegma|ass|dick/
