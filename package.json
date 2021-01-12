@@ -1,0 +1,31 @@
+{
+  "name": "basic-node-chat",
+  "version": "1.0.0",
+  "description": "A basic chat app made in node.js",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 1",
+    "build": "echo \"No build specified\" && exit 1",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NQShabazz/basic-node-chat.git"
+  },
+  "keywords": [
+    "node.js",
+    "npm",
+    "socket.io"
+  ],
+  "author": "Nazaire Shabazz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NQShabazz/basic-node-chat/issues"
+  },
+  "homepage": "https://github.com/NQShabazz/basic-node-chat#readme"
+}
