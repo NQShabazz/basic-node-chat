@@ -71,6 +71,7 @@ module.exports = (port) => {
     roomArray.forEach(room => socket.join(room))
 
     socket.emit('authenticated', { id: socket.id, username: socket.username })
+    
     roomArray.length && io.in(roomArray[0]).emit(serverNotif, `${socket.username} has joined the chat!`)
 
     socket.on('disconnecting', () => {
